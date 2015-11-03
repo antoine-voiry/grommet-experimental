@@ -1,4 +1,5 @@
 FROM node:0.12.7-wheezy
+
 # remove several traces of debian python
 RUN apt-get purge -y python.*
 
@@ -11,7 +12,11 @@ RUN \
   apt-get install -y python python-dev python-pip python-virtualenv && \
   rm -rf /var/lib/apt/lists/*
 
-RUN npm install -g bower gulp --save-dev && npm link gulp && npm install -g grommet
+# install GULP and GROMMET
+RUN \
+  npm install -g bower gulp --save-dev && \
+  npm link gulp && \
+  npm install -g grommet
 
 # Define working directory.
 WORKDIR /data
