@@ -1,4 +1,4 @@
-FROM node:0.12.7-wheezy
+FROM node:4.2.2-wheezy
 
 # remove several traces of debian python
 RUN apt-get purge -y python.*
@@ -12,21 +12,28 @@ RUN \
   apt-get install -y python python-dev python-pip python-virtualenv && \
   rm -rf /var/lib/apt/lists/*
 
-# install GULP and GROMMET
-RUN \
-  npm install -g bower gulp --save-dev && \
-  npm link gulp && \
-  npm install -g grommet
+RUN groupadd -r grommet && useradd -ms /bin/bash -g grommet grommet
 
+
+WORKDIR /home/grommet/data
+# install GULP and GROMMET
+
+RUN npm install -g bower gulp --save-dev 
+RUN npm link gulp
+run npm install -g grommet
+
+RUN chgrp -R grommet /home/grommet && chown -R grommet /home/grommet
+
+USER grommet
 # Define working directory.
-WORKDIR /data
+WORKDIR /home/grommet/data
 
 
 
 # replace this with your application's default port
-EXPOSE 9000
+#EXPOSE 9000
 
 # Define default command.
-#CMD ["bash"]
+CMD ["bash"]
 
 
